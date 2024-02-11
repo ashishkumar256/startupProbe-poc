@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-http-server-pod
+spec:
+  containers:
+  - name: http-server-container
+    image: ashishkumar256/startup_probe:latest
+    ports:
+    - containerPort: 8080
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 20
+      periodSeconds: 10
+    startupProbe:
+      httpGet:
+        path: /init
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 15
+  - name: redis-container
+    image: redis:latest
+    ports:
+    - containerPort: 6379
